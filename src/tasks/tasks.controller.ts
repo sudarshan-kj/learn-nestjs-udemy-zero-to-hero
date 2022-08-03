@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { Task, TaskStatus } from './tasks.model';
@@ -18,6 +19,11 @@ export class TasksController {
   @Get()
   getAllTasks(): Task[] {
     return this.tasksService.getAllTasks();
+  }
+
+  @Get('/search')
+  searchFor(@Query('q') q: string): Task {
+    return this.tasksService.searchFor(q);
   }
 
   @Get('/:id')

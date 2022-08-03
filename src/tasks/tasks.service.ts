@@ -18,6 +18,12 @@ export class TasksService {
     return this.tasks.find((task) => task.id === id);
   }
 
+  searchFor(q: string) {
+    return this.tasks.find(
+      (task) => task.title.includes(q) || task.description.includes(q),
+    );
+  }
+
   createTask(createTaskDto: CreateTaskDto): Task {
     const { title, description } = createTaskDto;
     const task: Task = {
