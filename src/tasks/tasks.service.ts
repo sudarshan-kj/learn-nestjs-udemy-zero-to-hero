@@ -31,6 +31,12 @@ export class TasksService {
     return task;
   }
 
+  updateTaskStatusById(id: string, status: TaskStatus) {
+    const taskToUpdate = this.tasks.find((task) => task.id === id);
+    if (taskToUpdate) taskToUpdate.status = status;
+    return taskToUpdate;
+  }
+
   //a better alternative is to just use the filter method
   deleteTaskById(id: string): string {
     const taskToDeleteIndex = this.tasks.findIndex((task) => task.id === id);
