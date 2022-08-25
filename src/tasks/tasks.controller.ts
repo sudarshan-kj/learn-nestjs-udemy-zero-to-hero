@@ -9,6 +9,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { CreateTaskDto } from './dto/create-task.dto';
+import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
 import { Task, TaskStatus } from './tasks.model';
 import { TasksService } from './tasks.service';
 
@@ -17,13 +18,11 @@ export class TasksController {
   constructor(private tasksService: TasksService) {}
 
   @Get()
-  getAllTasks(): Task[] {
+  getTasks(@Query() filterDto: GetTasksFilterDto): Task[] {
+    if (Object.keys(filterDto).length) {
+      return this.tasksService.getFilteredTasks(filterDto);
+    }
     return this.tasksService.getAllTasks();
-  }
-
-  @Get('/search')
-  searchFor(@Query('q') q: string): Task {
-    return this.tasksService.searchFor(q);
   }
 
   @Get('/:id')

@@ -2,7 +2,7 @@ import { Get, Injectable } from '@nestjs/common';
 import { Task, TaskStatus } from './tasks.model';
 import { v4 as uuid } from 'uuid';
 import { CreateTaskDto } from './dto/create-task.dto';
-import { first } from 'rxjs';
+import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
 
 /* Note: making any component Injectable converts it into a Singleton
 Hence, the TasksService component here one such */
@@ -14,14 +14,26 @@ export class TasksService {
     return this.tasks;
   }
 
-  getTaskById(id: string) {
-    return this.tasks.find((task) => task.id === id);
+  getFilteredTasks(filterDto: GetTasksFilterDto): Task[] {
+    const { search, status } = filterDto;
+    let tasks = this.getAllTasks();
+
+    if (status) {
+      return this.tasks.filter((task) => task.status === status);
+    }
+    if (search) {
+      return this.tasks.filter(
+        (task) =>
+          task.description.toLowerCase().includes(search) ||
+          task.title.toLowerCase().includes(search),
+      );
+    }
+
+    return tasks;
   }
 
-  searchFor(q: string) {
-    return this.tasks.find(
-      (task) => task.title.includes(q) || task.description.includes(q),
-    );
+  getTaskById(id: string) {
+    return this.tasks.find((task) => task.id === id);
   }
 
   createTask(createTaskDto: CreateTaskDto): Task {
